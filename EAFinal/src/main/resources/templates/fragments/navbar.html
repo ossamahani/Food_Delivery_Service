@@ -1,0 +1,59 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="/static/css/basic.css" th:href="@{../../static/css/basic.css}" />
+</head>
+<body>
+<div th:fragment="navbar">
+    <nav style="background-color:lightcoral;" class="navbar navbar-default navbar-fixed-top food-nav">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only" th:text="#{navbar.toggle}">[Toggle navigation]</span> <span
+                        class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span
+                        class="icon-bar"></span>
+                </button>
+                <a style="color:#FFFFFF " class="navbar-brand fmenu" th:text="#{navbar.brand}" th:href="@{/}">[Food Delivery]</a>
+            </div>
+            <div sec:authorize="hasRole('ROLE_CONSUMER')" class="navbar-collapse collapse" id="navbar-item"
+                 style="width:80px;float:left;">
+                <a style="color:#FFFFFF " class="navbar-brand fmenu" th:text="#{ea.navbar.item.list}" th:href="@{/item/list}">[Items]</a>
+            </div>
+            <div sec:authorize="hasRole('ROLE_CONSUMER')" class="navbar-collapse collapse" id="navbar-consumer"
+                 style="width:80px;float:left;">
+                <a style="color:#FFFFFF " class="navbar-brand fmenu" th:text="#{ea.navbar.dashboard}" th:href="@{/consumer/dashboard}">[Dashboard]</a>
+            </div>
+            <div sec:authorize="hasRole('ROLE_BUSINESS')" class="navbar-collapse collapse" id="navbar-business"
+                 style="width:80px;float:left;">
+                <a style="color:#FFFFFF " class="navbar-brand fmenu" th:text="#{ea.navbar.dashboard}" th:href="@{/business/dashboard}">[Dashboard]</a>
+            </div>
+            <!--<div sec:authorize="hasRole('ROLE_CONSUMER')" class="navbar-collapse collapse" id="navbar-main"-->
+                 <!--style="width:200px;float:left;">-->
+                <!--<a style="color:#FFFFFF " class="navbar-brand" th:text="#{ea.navbar.item.list}" th:href="@{/item/list}">[Item]</a>-->
+            <!--</div>-->
+            <div class="navbar-collapse collapse sign-out-btn">
+
+                <ul class="nav navbar-nav navbar-right" style="margin-top:5px;">
+
+                    <li th:if="${#authorization.expression('!isAuthenticated()')}">
+                        <a href="/register" th:href="@{/register}">Register</a>
+                    </li>
+                    <li th:if="${#authorization.expression('!isAuthenticated()')}">
+                        <a href="/login" th:href="@{/login}">Sign In</a>
+                    </li>
+                    <li th:if="${#authorization.expression('isAuthenticated()')}">
+                        <form th:action="@{/logout}" method="post">
+                            <button class="btn btn-success sign-out-btn" type="submit" value="Sign Out">Sign Out</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br /><br /><br />
+</div>
+
+
+</body>
+</html>

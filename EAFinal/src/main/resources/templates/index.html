@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
+          media="screen"/>
+    <script src="https://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <link type="text/css" href="css/basic.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function() {
+
+        });
+    </script>
+    <title>Food Delivery</title>
+</head>
+<body>
+
+<div th:include="fragments/navbar :: navbar">Header</div>
+<div class="fimagery">
+    <div id="sticky_header" class="ui_sticky">
+        <div class="search_1">
+            <div class="wrapper-search">
+                <div id="search_main_container" class="full_search  ">
+                    <form class="navbar-form navbar-left food-search" role="search" th:action="@{/item/search}" method="post">
+                        <div class="form-group">
+                            <input type="text" name="itemName" class="form-control" placeholder="Search Items" />
+                        </div>
+                        <button type="submit" class="btn btn-default glyphicon glyphicon-search btn-search">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="home-desc">
+        <h1>Welcome to Food Delivery Service</h1>
+        <br/>
+        <h2>We are here to serve you</h2>
+        <br/>
+    </div>
+</div>
+<div class="fservices">
+    <section id="works" class="color-primary">
+        <div class="container">
+            <div class="divide40"></div>
+            <h2 class="white txt-center">How It Works</h2>
+            <div class="divide60"></div>
+            <div class="row">
+                <div class="col-md-4 feature">
+                    <i class="extralarge icon-step-1">
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                    </i>
+                    <br /><br /><br />
+                    <h4 class="white">Choose from restaurants in your area</h4>
+                </div>
+                <div class="col-md-4 feature">
+                    <i class="extralarge icon-step-2">
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                    </i>
+                    <br /><br /><br />
+                    <h4 class="white">Place your order online</h4>
+                </div>
+                <div class="col-md-4 feature">
+                    <i class="extralarge icon-step-3">
+                        &nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                    </i>
+                    <br /><br /><br />
+                    <h4 class="white">Your food delivered!<br />No cooking or leaving home required</h4>
+                </div>
+            </div>
+            <div class="divide40"></div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

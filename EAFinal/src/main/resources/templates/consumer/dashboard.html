@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
+          media="screen"/>
+    <script src="https://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.3.2/notify.js"
+            th:src="@{/webjars/notifyjs/0.3.2/notify.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.3.2/styles/bootstrap/notify-bootstrap.js"
+            th:src="@{/webjars/bootstrap-notify/3.1.3/bootstrap-notify.js}"></script>
+    <script>
+        $(document).ready(function() {
+            $(".btnCart").on('click',function(){
+                var id = this.getAttribute("id");
+                console.log(id);
+                $.ajax({
+                    url: '/cart/add/'+ id,
+                    method: 'POST'
+                }).success(function(data) {
+                    $.notify(data)
+                });
+            });
+        });
+    </script>
+    <title>Welcome to Consumer Dashboard</title>
+</head>
+<body>
+<div th:include="fragments/navbar :: navbar">Header</div>
+<h1>Welcome to Consumer Dashboard</h1>
+<div sec:authorize="hasRole('ROLE_CONSUMER')">
+    <a th:href="${'/order'}">
+        <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-tags"></span> My Order
+        </button>
+    </a>
+    <!--<a th:href="${'/consumer/edit/'+session.user.id}">-->
+        <!--<button type="button" class="btn btn-default btn-sm">-->
+            <!--<span class="glyphicon glyphicon-pencil"></span> Edit Info-->
+        <!--</button>-->
+    <!--</a>-->
+</div>
+
+
+
+<div class="container" style="margin: inherit">
+    <div th:if="${not #lists.isEmpty(consumerList)}">
+        <h2>Consumer Info</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Address</th>
+            </tr>
+            <tr th:each="consumer : ${consumerList}">
+                <td th:text="${consumer.firstName}"></td>
+                <td th:text="${consumer.lastName}"></td>
+                <td th:text="${consumer.address}"></td>
+                <div sec:authorize="hasRole('ROLE_CONSUMER')">
+                    <td><a th:href="${'/consumer/edit/' + consumer.id}">Edit</a></td>
+                </div>
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td><a th:href="${'/consumer/delete/' + consumer.id}">Delete</a></td>
+                </div>
+            </tr>
+
+        </table>
+    </div>
+</div>
+
+
+<h2>Restaurant list</h2>
+<table class="table table-striped">
+    <tr>
+        <!-- <th>Id</th>
+         <th>Business Type</th>-->
+        <th>Name</th>
+        <th>Description</th>
+        <th>Image</th>
+        <th>Longitude</th>
+        <th>Latitude</th>
+        <th>Items</th>
+        <!--<th>Order Groups</th>-->
+    </tr>
+    <tr th:each="business : ${businessList}">
+        <td th:text="${business.name}"></td>
+        <td th:text="${business.description}"></td>
+        <td><a th:href="${business.LogoImage}">photo</a></td>
+        <td th:text="${business.longitude}"></td>
+        <td th:text="${business.latitude}"></td>
+        <td><a th:href="${'/business/'+business.id+'/item/list'}">Items</a></td>
+        <!--<td><a th:href="${item.orderGroups}">Order Groups</a></td>-->
+
+    </tr>
+
+</table>
+<br /><br />
+<div th:if="${not #lists.isEmpty(itemList)}">
+    <h2>Item list</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Business</th>
+            <th>Status</th>
+        </tr>
+        <tr th:each="item : ${itemList}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.description}"></td>
+            <td><a th:href="${item.itemImage}">photo</a></td>
+            <td th:text="${item.price}"></td>
+            <td th:text="${item.business}"><a th:href="${'/dashboard'}">Business</a></td>
+            <td th:text="${item.status}"></td>
+            <td><div sec:authorize="hasRole('ROLE_CONSUMER')"><button type="button" class="btn btn-default btn-sm btnCart" th:id="${item.id}">
+                <span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart
+            </button></div></td>
+            <div sec:authorize="hasRole('ROLE_BUSINESS')">
+                <td><a th:href="${'/business/'+businessId+'/item/show/' + item.id}">Show</a></td>
+                <td><a th:href="${'/business/'+businessId+'/item/edit/' + item.id}">Edit</a></td>
+                <td><a th:href="${'/business/'+businessId+'/item/delete/' + item.id}">Delete</a></td>
+            </div>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

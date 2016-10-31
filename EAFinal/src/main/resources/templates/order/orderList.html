@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
+          media="screen"/>
+    <script src="https://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <title>Your Order History</title>
+</head>
+<body>
+
+<div th:include="fragments/navbar :: navbar">Header</div>
+
+
+
+<div class="container" style="margin: inherit">
+    <div><a th:href="${'/consumer/dashboard'}">Go to DASHBOARD</a></div>
+    <div><a th:href="${'/item/list'}">Choose ITEM</a></div>
+    <div>
+        <h2>My Cart</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>Item</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+            <tr th:each="orderGroup : ${cartList}">
+                <td></td>
+                <td th:text="${orderGroup.item.name}"></td>
+                <td th:text="${'$'+orderGroup.item.price}">$</td>
+                <td><a th:href="${'ordergroup/delete/' + orderGroup.orderGroupId}">delete</a></td>
+            </tr>
+        </table>
+        <div><a th:href="${'/order/create'}" th:if="${not #lists.isEmpty(cartList)}">PROCEED TO REQUEST THIS ORDER</a></div>
+    </div>
+    <div th:if="${not #lists.isEmpty(orderList)}">
+        <h2>Your Ordered List</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>Ordered Date</th>
+                <th>Total Price</th>
+                <th>Travelled Miles</th>
+                <th></th>
+            </tr>
+            <tr th:each="order : ${orderList}" th:if="${order.status == 2}">
+                <th></th>
+                <td th:text="${order.date}"></td>
+                <td th:text="${'$'+order.totalPrice}"></td>
+                <td th:text="${order.travelledMiles}"></td>
+                <td><a th:href="${'ordergroup/details/' + order.orderId}">details</a></td>
+            </tr>
+
+        </table>
+    </div>
+    <div th:if="${not #lists.isEmpty(orderList)}">
+        <h2>Your Order History</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>Ordered Date</th>
+                <th>Total Price</th>
+                <th>Travelled Miles</th>
+                <th></th>
+            </tr>
+            <tr th:each="order : ${orderList}" th:if="${order.status == 3}">
+                <th></th>
+                <td th:text="${order.date}"></td>
+                <td th:text="${'$'+order.totalPrice}"></td>
+                <td th:text="${order.travelledMiles}"></td>
+                <td><a th:href="${'ordergroup/details/' + order.orderId}">details</a></td>
+            </tr>
+
+        </table>
+    </div>
+
+
+</div>
+
+</body>
+</html>

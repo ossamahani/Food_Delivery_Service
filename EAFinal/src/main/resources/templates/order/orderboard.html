@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
+          media="screen"/>
+    <script src="https://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <title>Your Order History</title>
+</head>
+<body>
+
+<div th:include="fragments/navbar :: navbar">Header</div>
+
+<div class="container" style="margin: inherit">
+    <div><a th:href="${'/consumer/dashboard'}">Go to Dashboard</a></div>
+
+    <div th:if="${not #lists.isEmpty(orderList)}">
+        <h2>Active Orders</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>Ordered Date</th>
+                <th>Ordered By</th>
+                <th>Total Price</th>
+                <th>Travelled Miles</th>
+                <th></th>
+                <th>Item List</th>
+            </tr>
+            <tr th:each="order : ${orderList}">
+                <td></td>
+                <td th:text="${order.date}"></td>
+                <td th:text="${order.consumer.username}"></td>
+                <td th:text="${'$'+order.totalPrice}"></td>
+                <td th:id="${'td_'+order.orderId}">
+                    <input type="text" class="form-control" th:id="${'id_'+order.orderId}" th:value="${order.travelledMiles}"/>
+                    <label th:id="${'error_'+order.orderId}" style="color:red;display:none;">Travelled miles value should be between 1 and 9</label>
+                </td>
+                <td>
+                    <button type="button" class="btnDelivered" th:id="${'btn_'+order.orderId}" th:value="${order.orderId}">DELIVERED</button>
+                </td>
+                <td>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Item ID</th>
+                            <th>Item</th>
+                            <th>Price</th>
+                        </tr>
+                        <tr th:each="orderGroup : ${order.orderGroups}">
+                            <td th:text="${orderGroup.item.id}"></td>
+                            <td th:text="${orderGroup.item.name}"></td>
+                            <td th:text="${'$'+orderGroup.item.price}">$</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+</div>
+<script>
+    jQuery(document).ready(function() {
+
+        $(".btnDelivered").click(function () {
+            var id = $(this).val();
+            if ($('#id_' + id).val().trim() != "") {
+                var OrderHelper = {};
+                OrderHelper.orderId = id;
+                OrderHelper.travelledMiles = $('#id_' + id).val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/delivery/orderedit',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify(OrderHelper),
+                    success: function (evt) {
+                        var miles = $('#id_' + id).val();
+                        $('#id_' + id).hide();
+                        $('#btn_' + id).hide();
+                        $('#error_' + id).hide();
+                        $('#td_' + id).append(miles);
+                    },
+                    error: function (error) {
+                        $('#error_' + id).show();
+                    }
+                });
+            }else{
+                alert("Please add Travelled Miles");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

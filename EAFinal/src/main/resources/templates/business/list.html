@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
+          media="screen"/>
+    <script src="https://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <title>List Item</title>
+</head>
+<body>
+
+<div th:include="fragments/navbar :: navbar">Header</div>
+
+<div class="container" style="margin: inherit">
+    <div th:if="${not #lists.isEmpty(businessList)}">
+        <h2>Product list</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Id</th>
+                <th>Business Type</th>
+                <th>Name</th>
+                <th>Description</th>
+                <!--<th>Image</th>-->
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Items</th>
+                <!--<th>Order Groups</th>-->
+            </tr>
+            <tr th:each="business : ${businessList}">
+                <td th:text="${business.id}"></td>
+                <td th:text="${business.businessType}"></td>
+                <td th:text="${business.name}"></td>
+                <td th:text="${business.description}"></td>
+                <!--<td><a th:href="${business.LogoImage}">photo</a></td>-->
+                <td th:text="${business.longitude}"></td>
+                <td th:text="${business.latitude}"></td>
+                <td><a th:href="${'/business/'+business.id+'/item/list'}">Items</a></td>
+                <!--<td><a th:href="${item.orderGroups}">Order Groups</a></td>-->
+                <div sec:authorize="hasRole('ROLE_BUSINESS')">
+                    <!--<td><a th:href="${'/business/show/' + business.id}">Show</a></td>-->
+                    <td><a th:href="${'/business/edit/' + business.id}">Edit</a></td>
+                </div>
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td><a th:href="${'/business/delete/' + business.id}">Delete</a></td>
+                </div>
+            </tr>
+
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
